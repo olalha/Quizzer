@@ -1,0 +1,8 @@
+# Ignore config files
+config/settings.py
+
+# Ignore user uploaded and generated data
+data/
+
+# Ignore database file
+*.db
