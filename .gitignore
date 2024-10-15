@@ -6,3 +6,7 @@ data/
 
 # Ignore database file
 *.db
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
