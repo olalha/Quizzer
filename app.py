@@ -1,9 +1,10 @@
+import os
 import streamlit as st
+
 from utils.database.db_setup import session
 from utils.database.models import UploadedFile, Quiz
-import os
-
-UPLOAD_FOLDER = 'data/uploads'
+from config.settings import UPLOAD_FOLDER
+from text_extraction.pdf_extractor import extract_text_from_pdf
 
 # Streamlit file uploader
 uploaded_file = st.file_uploader("Upload a Lecture File", type=['pdf', 'pptx', 'docx'])
@@ -24,10 +25,14 @@ if uploaded_file:
     session.commit()
     
     st.write(f"File '{uploaded_file.name}' uploaded and saved to database.")
-
-# Display quizzes (as an example)
-quizzes = session.query(Quiz).all()
-if quizzes:
-    for quiz in quizzes:
-        st.write(f"Quiz ID: {quiz.id}")
-        st.write(quiz.quiz_content)
+    
+    # If the uploaded file is a PDF, extract and display the first page content
+    if uploaded_file.name.lower().endswith('.pdf'):
+        extracted_text = extract_text_from_pdf(file_path)
+        first_page_text = extracted_text.get(1)
+        
+        if first_page_text:
+            st.subheader("First Page Content:")
+            st.text(first_page_text)
+        else:
+            st.warning("No text found on the first page of the PDF.")
