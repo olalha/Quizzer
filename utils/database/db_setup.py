@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .utils import Base
+from .models import Base
 
 DATABASE_URL = 'sqlite:///quiz_generator.db'
 

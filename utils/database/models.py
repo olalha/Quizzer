@@ -11,7 +11,7 @@ class UploadedFile(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     filename = Column(String, nullable=False)
     filepath = Column(String, nullable=False)
-    upload_time = Column(DateTime, default=datetime.utcnow)
+    upload_time = Column(DateTime, default=datetime.datetime.utcnow)
     title = Column(Text)
     description = Column(Text)
 
@@ -22,6 +22,6 @@ class Quiz(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     file_id = Column(Integer, nullable=False)
     quiz_content = Column(JSON, nullable=False)
-    created_time = Column(DateTime, default=datetime.utcnow)
+    created_time = Column(DateTime, default=datetime.datetime.utcnow)
     title = Column(Text)
     description = Column(Text)
