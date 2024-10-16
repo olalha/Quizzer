@@ -1,4 +1,5 @@
-from PyPDF2 import PdfReader
+from pdfminer.high_level import extract_pages
+from pdfminer.layout import LTTextContainer
 
 def extract_text_from_pdf(pdf_path):
     
@@ -12,10 +13,15 @@ def extract_text_from_pdf(pdf_path):
         dict: A dictionary where each key is the page number (starting from 1)
     """
     
-    reader = PdfReader(pdf_path)
     pdf_text = {}
 
-    for page_number, page in enumerate(reader.pages, start=1):
-        pdf_text[page_number] = page.extract_text() or ""
+    # Go through each page of the PDF and extract the text
+    for page_number, page_layout in enumerate(extract_pages(pdf_path), start=1):
+        page_text = ""
+        for element in page_layout:
+            # Check if the element is a text container
+            if isinstance(element, LTTextContainer):
+                page_text += element.get_text()
+        pdf_text[page_number] = page_text.strip() or ""
     
     return pdf_text

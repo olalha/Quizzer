@@ -2,9 +2,10 @@ import os
 import streamlit as st
 
 from utils.database.db_setup import session
-from utils.database.models import UploadedFile, Quiz
+from utils.database.models import UploadedFile, LearningMaterial
 from config.settings import UPLOAD_FOLDER
 from text_extraction.pdf_extractor import extract_text_from_pdf
+from text_processing.batch_splitting import split_pages_into_batches, test_batch_word_counts
 
 # Streamlit file uploader
 uploaded_file = st.file_uploader("Upload a Lecture File", type=['pdf', 'pptx', 'docx'])
@@ -28,6 +29,13 @@ if uploaded_file:
     
     # If the uploaded file is a PDF, extract and display the first page content
     if uploaded_file.name.lower().endswith('.pdf'):
+        
+        # TESTING AREA AFTER A PDF IS UPLOADED
+        
+        # print(split_pages_into_batches(extract_text_from_pdf(file_path), 500))
+        # print(test_batch_word_counts(extract_text_from_pdf(file_path), split_pages_into_batches(extract_text_from_pdf(file_path), 500)))
+        
+        """
         extracted_text = extract_text_from_pdf(file_path)
         first_page_text = extracted_text.get(1)
         
@@ -36,3 +44,4 @@ if uploaded_file:
             st.text(first_page_text)
         else:
             st.warning("No text found on the first page of the PDF.")
+        """

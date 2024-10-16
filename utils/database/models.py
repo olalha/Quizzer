@@ -16,12 +16,13 @@ class UploadedFile(Base):
     description = Column(Text)
 
 # Table for quizzes
-class Quiz(Base):
-    __tablename__ = 'quizzes'
+class LearningMaterial(Base):
+    __tablename__ = 'learning_materials'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     file_id = Column(Integer, nullable=False)
-    quiz_content = Column(JSON, nullable=False)
+    learning_content = Column(JSON, nullable=False)
+    quiz_content = Column(JSON)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
     title = Column(Text)
     description = Column(Text)
