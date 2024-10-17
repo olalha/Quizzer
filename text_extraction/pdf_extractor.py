@@ -4,13 +4,13 @@ from pdfminer.layout import LTTextContainer
 def extract_text_from_pdf(pdf_path):
     
     """
-    Extracts all the text from a given PDF file
+    Extracts all the text from a given PDF file.
 
     Args:
-        pdf_path (str): The path to the PDF file to be processed
+        pdf_path (str): The path to the PDF file to be processed.
 
     Returns:
-        dict: A dictionary where each key is the page number (starting from 1)
+        dict: A dictionary where each key is the page number (starting from 1).
     """
     
     pdf_text = {}
