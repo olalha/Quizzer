@@ -1,10 +1,9 @@
 import streamlit as st
 
-def init_session_state():
-    if 'files' not in st.session_state:
-        st.session_state.files = []
-    if 'alert' not in st.session_state:
-        st.session_state.alert = None
+if 'files' not in st.session_state:
+    st.session_state.files = []
+if 'alert' not in st.session_state:
+    st.session_state.alert = None
 
 files_page = st.Page(
     page="views/files_view.py",
