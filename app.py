@@ -1,48 +1,38 @@
 import os
 import streamlit as st
-
-from utils.database.db_setup import session
-from utils.database.models import UploadedFile, LearningMaterial
-from utils.database.db_utils import delete_uploaded_file, cleanup_all_uploaded_files
-from config.settings import UPLOAD_FOLDER
+from utils.alert import show_alert
+from utils.file_management import load_files, save_uploaded_file, handle_file_deletion, handle_delete_all
 
 # Initialize session state
 if 'files' not in st.session_state:
     st.session_state.files = []
+    
+if 'alert' not in st.session_state:
+    st.session_state.alert = None
 
-def load_files():
-    return session.query(UploadedFile).all()
-
-def save_uploaded_file(uploaded_file):
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-    file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.name)
-    with open(file_path, 'wb') as f:
-        f.write(uploaded_file.getbuffer())
-    new_file = UploadedFile(filename=uploaded_file.name, filepath=file_path, title="Lecture material")
-    session.add(new_file)
-    session.commit()
+if st.session_state.alert:
+    show_alert(st)
 
 def handle_file_upload():
-    with st.form("upload_form"):
+    with st.form("upload_form", clear_on_submit=True):
         uploaded_file = st.file_uploader("Upload a Lecture File", type=['pdf', 'pptx', 'docx'])
         submit_button = st.form_submit_button("Upload")
 
-    if submit_button and uploaded_file is not None:
-        save_uploaded_file(uploaded_file)
-        st.success(f"File '{uploaded_file.name}' uploaded and saved to database.")
-        st.session_state.files = load_files()
-        st.rerun()
-
-def handle_file_deletion(file_id):
-    delete_uploaded_file(session, file_id)
-    st.session_state.files = load_files()
-    st.rerun()
-
-def handle_delete_all():
-    cleanup_all_uploaded_files(session)
-    st.session_state.files = load_files()
-    st.rerun()
+    if submit_button:
+        if uploaded_file is not None:
+            save_uploaded_file(uploaded_file)
+            st.session_state.alert = {
+                'type': 'success',
+                'message': f"File '{uploaded_file.name}' uploaded and saved to database."
+            }
+            st.session_state.files = load_files()
+            st.rerun()
+        else:
+            st.session_state.alert = {
+                'type': 'error',
+                'message': "Please select a file before uploading."
+            }
+            show_alert(st)
 
 def display_file_table():
     st.subheader("Uploaded Files")
@@ -57,10 +47,19 @@ def display_file_table():
                 st.write(file.upload_time)
             with col4:
                 if st.button("Delete", key=f"delete_{file.id}"):
-                    handle_file_deletion(file.id)
+                    st.session_state.alert = {
+                        'type': 'warning',
+                        'message': f"File '{file.filename}' removed from database."
+                    }
+                    st.session_state.files = handle_file_deletion(file.id)
+                    st.rerun()
     else:
-        st.info("No files uploaded yet.")
-
+        st.session_state.alert = {
+            'type': 'info',
+            'message': "No files uploaded yet."
+        }
+        show_alert(st)
+        
 def main():
     st.title("File Upload and Management")
 
@@ -71,7 +70,12 @@ def main():
     handle_file_upload()
 
     if st.button("Delete All Files"):
-        handle_delete_all()
+        st.session_state.files = handle_delete_all()
+        st.session_state.alert = {
+            'type': 'warning',
+            'message': "All files have been removed from the database."
+        }
+        st.rerun()
 
     display_file_table()
 
