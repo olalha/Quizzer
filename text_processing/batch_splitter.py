@@ -1,6 +1,6 @@
 import math
 
-def split_pages_into_batches(pdf_text, target_word_count):
+def split_pages_into_batches(pdf_text: dict, target_word_count: int) -> list:
     """
     Splits pages from a PDF text dictionary into batches of similar word count.
     Inputed pages do not need to be sequential.
@@ -45,7 +45,7 @@ def split_pages_into_batches(pdf_text, target_word_count):
 
     return batch_starts
 
-def test_batch_word_counts(pdf_text, batch_starts):
+def test_batch_word_counts(pdf_text: dict, batch_starts: list) -> list:
     """
     Calculates the word count for each batch created by split_pages_into_batches.
 
