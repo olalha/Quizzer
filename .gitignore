@@ -11,5 +11,8 @@ data/
 __pycache__/
 *.pyc
 
+# Ignore venv
+_quizzer_venv/
+
 # Ignore vscode files
 .vscode/
