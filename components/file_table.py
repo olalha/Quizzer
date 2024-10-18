@@ -2,7 +2,7 @@ import streamlit as st
 from utils.file_management import handle_file_deletion, handle_delete_all
 from utils.alert import show_alert
 
-def render():
+def render_file_table():
     st.subheader("Uploaded Files")
     
     if st.button("Delete All Files"):
@@ -11,7 +11,7 @@ def render():
             'type': 'warning',
             'message': "All files have been removed from the database."
         }
-        return True  # Rerun needed
+        st.rerun()
 
     if st.session_state.files:
         for file in st.session_state.files:
@@ -24,17 +24,15 @@ def render():
                 st.write(file.upload_time)
             with col4:
                 if st.button("Delete", key=f"delete_{file.id}"):
+                    st.session_state.files = handle_file_deletion(file.id)
                     st.session_state.alert = {
                         'type': 'warning',
                         'message': f"File '{file.filename}' removed from database."
                     }
-                    st.session_state.files = handle_file_deletion(file.id)
-                    return True  # Indicate that a rerun is needed
+                    st.rerun()
     else:
         st.session_state.alert = {
             'type': 'info',
             'message': "No files uploaded yet."
         }
-        show_alert(st)
-    
-    return False  # No rerun needed
+        show_alert()

@@ -15,6 +15,6 @@ The goal of this project is to create a simple application that allows users to 
 
 1. **Streamlit**: Simplifies web app creation, allowing interaction through a Python-only interface.
 2. **OpenRouter API**: Provides LLM-based quiz generation from the lecture content.
-3. **PyPDF2, python-pptx, python-docx**: Used to extract text from PDF, PPTX, and DOCX files.
+3. **pdfminer.six, python-pptx, python-docx**: Used to extract text from PDF, PPTX, and DOCX files.
 4. **requests**: For sending HTTP requests to the OpenRouter API.
 5. **Python Virtual Environment (venv)**: Manages dependencies and isolates project libraries.

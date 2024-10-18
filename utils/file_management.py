@@ -2,7 +2,7 @@ import os
 from utils.database.db_setup import session
 from utils.database.models import UploadedFile
 from utils.database.db_utils import delete_uploaded_file, cleanup_all_uploaded_files
-from config.settings import UPLOAD_FOLDER
+from _config.settings import UPLOAD_FOLDER
 
 def load_files():
     return session.query(UploadedFile).all()

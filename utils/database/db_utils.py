@@ -1,7 +1,7 @@
 import os
 from sqlalchemy.orm import Session
 from .models import UploadedFile
-from config.settings import UPLOAD_FOLDER
+from _config.settings import UPLOAD_FOLDER
 
 def delete_uploaded_file(session: Session, file_id: int):
     """

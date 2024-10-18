@@ -1,4 +1,6 @@
-def show_alert(st):
+import streamlit as st
+
+def show_alert():
     """
     Display a Streamlit alert from session state and clear it.
 
