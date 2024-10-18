@@ -1,4 +1,4 @@
-#!C:\Code\Quizzer\quizzer_venv\Scripts\python.exe
+#!C:\Code\Quizzer\_quizzer_venv\Scripts\python.exe
 """A command line tool for extracting text and images from PDF and
 output it to plain text, html, xml or tags."""
 import argparse

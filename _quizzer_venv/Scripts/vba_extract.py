@@ -1,4 +1,4 @@
-#!C:\Code\Quizzer\quizzer_venv\Scripts\python.exe
+#!C:\Code\Quizzer\_quizzer_venv\Scripts\python.exe
 
 ##############################################################################
 #
