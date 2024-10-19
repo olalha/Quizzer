@@ -1,8 +1,8 @@
 # Ignore config files
-config/
+_config/
 
 # Ignore user uploaded and generated data
-data/
+_data/
 
 # Ignore database file
 *.db
