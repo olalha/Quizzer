@@ -1,10 +1,9 @@
 # Data storage location
-UPLOAD_FOLDER = '_data/uploads'
-GENERATED_DATA_FOLDER = '_data/generated'
+UPLOAD_FOLDER = None
+GENERATED_DATA_FOLDER = None
 
 # OpenRouter settings
-
+OPENROUTER_API_KEY = None
 MODELS = {
-    'Gemini Pro (experimental)': 'google/gemini-pro-1.5-exp',
-    'Ministral 8B': 'mistralai/ministral-8b'
+    None: None
 }
