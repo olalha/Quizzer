@@ -13,5 +13,6 @@ st.title("Files")
 if len(st.session_state.files) == 0:
     st.session_state.files = load_files()
 
+# Load components
 render_file_upload()
 render_file_table()

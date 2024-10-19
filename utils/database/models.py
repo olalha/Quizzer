@@ -9,20 +9,21 @@ class UploadedFile(Base):
     __tablename__ = 'uploaded_files'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(Text)
+    description = Column(Text)
     filename = Column(String, nullable=False)
     filepath = Column(String, nullable=False)
     upload_time = Column(DateTime, default=datetime.datetime.utcnow)
-    title = Column(Text)
-    description = Column(Text)
 
 # Table for quizzes
 class LearningMaterial(Base):
     __tablename__ = 'learning_materials'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    file_id = Column(Integer, nullable=False)
-    learning_content = Column(JSON, nullable=False)
-    quiz_content = Column(JSON)
-    created_time = Column(DateTime, default=datetime.datetime.utcnow)
-    title = Column(Text)
+    title = Column(Text, nullable=False)
     description = Column(Text)
+    file_id = Column(Integer, nullable=False)
+    summary_json = Column(String)
+    notes_json = Column(String)
+    quiz_json = Column(String)
+    created_time = Column(DateTime, default=datetime.datetime.utcnow)

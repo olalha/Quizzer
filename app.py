@@ -9,7 +9,12 @@ files_page = st.Page(
     page="views/files_view.py",
     title="Files",
     default=True
-)   
+)
 
-nav = st.navigation(pages=[files_page])
+llm_testing_page = st.Page(
+    page="views/llm_testing_view.py",
+    title="LLM Testing",
+)
+
+nav = st.navigation(pages=[files_page, llm_testing_page])
 nav.run()

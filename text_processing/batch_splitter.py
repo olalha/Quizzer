@@ -1,13 +1,13 @@
 import math
 
-def split_pages_into_batches(pdf_text: dict, target_word_count: int) -> list:
+def split_pages_into_batches(text: dict, target_word_count: int) -> list:
     """
-    Splits pages from a PDF text dictionary into batches of similar word count.
+    Splits pages from a text dictionary into batches of similar word count.
     Inputed pages do not need to be sequential.
     Ensures that each batch has at least one page.
 
     Args:
-        pdf_text (dict): Dictionary of page numbers to page text.
+        text (dict): Dictionary of page numbers to page text.
         target_word_count (int): Approximate target word count for each batch.
 
     Returns:
@@ -17,21 +17,21 @@ def split_pages_into_batches(pdf_text: dict, target_word_count: int) -> list:
     # Perform input validation
     if target_word_count <= 0:
         raise ValueError("Error: target_word_count must be a positive integer.")
-    if not pdf_text:
+    if not text:
         return []
 
     # Pre-calculate word counts for each page
-    word_counts = {page: len(text.split()) for page, text in pdf_text.items()}
+    word_counts = {page: len(text.split()) for page, text in text.items()}
     
     # Calculate total words and pages
     total_words = sum(word_counts.values())
-    total_pages = len(pdf_text)
+    total_pages = len(text)
 
     # Calculate the number of batches and ideal batch size
     num_batches = min(math.ceil(total_words / target_word_count), total_pages)
     ideal_batch_size = total_words / num_batches
 
-    sorted_pages = sorted(pdf_text.keys())
+    sorted_pages = sorted(text.keys())
     batch_starts = [sorted_pages[0]]  # First batch starts at the lowest page number
     current_word_count = 0
 
@@ -45,12 +45,12 @@ def split_pages_into_batches(pdf_text: dict, target_word_count: int) -> list:
 
     return batch_starts
 
-def test_batch_word_counts(pdf_text: dict, batch_starts: list) -> list:
+def test_batch_word_counts(text: dict, batch_starts: list) -> list:
     """
     Calculates the word count for each batch created by split_pages_into_batches.
 
     Args:
-        pdf_text (dict): Dictionary of page numbers to page text.
+        text (dict): Dictionary of page numbers to page text.
         batch_starts (list): List of page numbers indicating the starting page of each batch.
 
     Returns:
@@ -58,10 +58,10 @@ def test_batch_word_counts(pdf_text: dict, batch_starts: list) -> list:
     """
     
     # Pre-calculate word counts for each page
-    word_counts = {page: len(text.split()) for page, text in pdf_text.items()}
+    word_counts = {page: len(text.split()) for page, text in text.items()}
     
     batch_word_counts = []
-    sorted_pages = sorted(pdf_text.keys())
+    sorted_pages = sorted(text.keys())
     
     # Iterate through batch start pages
     for i, start_page in enumerate(batch_starts):

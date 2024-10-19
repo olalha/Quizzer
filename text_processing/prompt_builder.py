@@ -1,10 +1,18 @@
 from importlib import resources
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateError
 
 # Set up Jinja2 environment
 with resources.path('text_processing', 'prompts') as prompts_path:
     env = Environment(loader=FileSystemLoader(prompts_path))
 
 def render_prompt(template_name, context):
-    template = env.get_template(template_name + '.html')
-    return template.render(context)
+    try:
+        template = env.get_template(template_name)
+        return template.render(context)
+    except TemplateError:
+        raise RuntimeError(f"Error: Issue rendering template: '{template_name}'")
+    
+
+
+
+
