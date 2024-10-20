@@ -2,7 +2,9 @@ import streamlit as st
 from utils.file_management import save_uploaded_file, load_files
 from utils.alert import show_alert
 
-def render_file_upload(allowed_types=['pdf', 'pptx', 'docx'], form_key="upload_form"):
+from text_processing.text_extractor import SUPPORTED_FILE_TYPES
+
+def render_file_upload(allowed_types=SUPPORTED_FILE_TYPES, form_key="upload_form"):
     with st.form(form_key, clear_on_submit=True):
         uploaded_file = st.file_uploader("Upload a Lecture File", type=allowed_types)
         submit_button = st.form_submit_button("Upload")

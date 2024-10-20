@@ -15,9 +15,7 @@ def split_pages_into_batches(text: dict, target_word_count: int) -> list:
     """
     
     # Perform input validation
-    if target_word_count <= 0:
-        raise ValueError("Error: target_word_count must be a positive integer.")
-    if not text:
+    if target_word_count <= 0 or not text:
         return []
 
     # Pre-calculate word counts for each page
@@ -45,7 +43,7 @@ def split_pages_into_batches(text: dict, target_word_count: int) -> list:
 
     return batch_starts
 
-def test_batch_word_counts(text: dict, batch_starts: list) -> list:
+def get_batch_word_counts(text: dict, batch_starts: list) -> list:
     """
     Calculates the word count for each batch created by split_pages_into_batches.
 

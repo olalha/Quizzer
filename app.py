@@ -11,10 +11,10 @@ files_page = st.Page(
     default=True
 )
 
-llm_testing_page = st.Page(
-    page="views/llm_testing_view.py",
-    title="LLM Testing",
+generate_page = st.Page(
+    page="views/generate_view.py",
+    title="Generate",
 )
 
-nav = st.navigation(pages=[files_page, llm_testing_page])
+nav = st.navigation(pages=[files_page, generate_page])
 nav.run()

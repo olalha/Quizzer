@@ -23,7 +23,7 @@ class LearningMaterial(Base):
     title = Column(Text, nullable=False)
     description = Column(Text)
     file_id = Column(Integer, nullable=False)
-    summary_json = Column(String)
+    summary_json = Column(String, nullable=False)
     notes_json = Column(String)
     quiz_json = Column(String)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)

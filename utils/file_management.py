@@ -24,3 +24,17 @@ def handle_file_deletion(file_id):
 def handle_delete_all():
     cleanup_all_uploaded_files(session)
     return load_files()
+
+def get_file_path(file_id):
+    file = session.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+    if file:
+        return file.filepath
+    return None
+
+def get_file_name(file_id):
+    file = session.query(UploadedFile).filter(UploadedFile.id == file_id).first()
+    return file.filename if file else None
+
+def get_file_id(file_name):
+    file = session.query(UploadedFile).filter(UploadedFile.filename == file_name).first()
+    return file.id if file else None
