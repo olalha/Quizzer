@@ -8,12 +8,13 @@ import os
 from sqlalchemy.orm import Session
 
 from .models import UploadedFile
-
-from _config.settings import UPLOAD_FOLDER
+from app import settings
 
 # Set default upload folder if not specified in settings
-if UPLOAD_FOLDER is None:
-    UPLOAD_FOLDER = '_data/uploads'
+UPLOAD_FOLDER = '_data/uploads'
+if 'upload_folder' in settings:
+    if os.path.isdir(settings['upload_folder']):
+        UPLOAD_FOLDER = settings['upload_folder']
 
 def save_uploaded_file(session: Session, uploaded_file):
     """
