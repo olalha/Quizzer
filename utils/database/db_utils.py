@@ -8,13 +8,9 @@ import os
 from sqlalchemy.orm import Session
 
 from .models import UploadedFile
-from app import settings
 
-# Set default upload folder if not specified in settings
+SUPPORTED_FILE_TYPES = ['pdf', 'pptx', 'docx']
 UPLOAD_FOLDER = '_data/uploads'
-if 'upload_folder' in settings:
-    if os.path.isdir(settings['upload_folder']):
-        UPLOAD_FOLDER = settings['upload_folder']
 
 def save_uploaded_file(session: Session, uploaded_file):
     """
@@ -30,6 +26,11 @@ def save_uploaded_file(session: Session, uploaded_file):
     
     # Construct file path
     file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.name)
+    
+    # Check if the file type is supported
+    file_type = file_path.split('.')[-1]
+    if file_type not in SUPPORTED_FILE_TYPES:
+        raise IOError(f"Error: Unsupported file type: {file_type}")
     
     # Write file to disk
     with open(file_path, 'wb') as f:

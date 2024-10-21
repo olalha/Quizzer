@@ -21,7 +21,7 @@ def split_pages_into_batches(text: dict, target_word_count: int) -> list:
     
     # Perform input validation
     if target_word_count <= 0 or not text:
-        return []
+        raise ValueError("Error: Invalid input parameters for batch splitting.")
 
     # Pre-calculate word counts for each page
     word_counts = {page: len(text.split()) for page, text in text.items()}

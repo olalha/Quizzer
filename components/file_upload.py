@@ -7,7 +7,7 @@ and updating the session state.
 """
 
 import streamlit as st
-from text_processing.text_extractor import SUPPORTED_FILE_TYPES
+from utils.database.db_utils import SUPPORTED_FILE_TYPES
 
 from .alert import show_alert
 from utils.file_management import handle_file_upload
@@ -19,7 +19,7 @@ def render_file_upload(allowed_types=SUPPORTED_FILE_TYPES, form_key="upload_form
         submit_button = st.form_submit_button("Upload")
 
     if submit_button:
-        if uploaded_file is not None:
+        if uploaded_file:
             # Handle the file upload process
             st.session_state.files = handle_file_upload(uploaded_file)
             # Set a success alert

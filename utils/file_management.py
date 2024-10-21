@@ -12,19 +12,19 @@ def load_files():
     return session.query(UploadedFile).all()
 
 # Get the file path for a given file ID
-def get_file_path(file_id):
+def get_file_path(file_id: int):
     file = session.query(UploadedFile).filter(UploadedFile.id == file_id).first()
     if file:
         return file.filepath
     return None
 
 # Get the filename for a given file ID
-def get_file_name(file_id):
+def get_file_name(file_id: int):
     file = session.query(UploadedFile).filter(UploadedFile.id == file_id).first()
     return file.filename if file else None
 
 # Get the file ID for a given filename
-def get_file_id(file_name):
+def get_file_id(file_name: str):
     file = session.query(UploadedFile).filter(UploadedFile.filename == file_name).first()
     return file.id if file else None
 
@@ -34,7 +34,7 @@ def handle_file_upload(uploaded_file):
     return load_files()
 
 # Handle file deletion for a given file ID and return updated file list
-def handle_file_deletion(file_id):
+def handle_file_deletion(file_id: int):
     delete_uploaded_file(session, file_id)
     return load_files()
 

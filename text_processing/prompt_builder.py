@@ -25,10 +25,8 @@ def render_prompt(template_name: str, context: dict = None) -> str:
         RuntimeError: If there's an issue rendering the template.
     """
     try:
-        # Get the template from the Jinja2 environment
+        # Render the template
         template = env.get_template(template_name)
-        
-        # Render the template with the provided context (or an empty dict if None)
         return template.render(context or {})
     
     except TemplateError:

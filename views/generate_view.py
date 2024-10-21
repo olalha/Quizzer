@@ -2,7 +2,7 @@ import streamlit as st
 
 from components.alert import show_alert
 from utils.file_management import load_files, get_file_name, get_file_id
-from text_processing.material_generator import generate_summary_json
+from text_processing.summary_generator import generate_summary_json
 
 # Display alert if it exists in session state
 if st.session_state.alert:

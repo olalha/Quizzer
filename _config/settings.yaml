@@ -2,10 +2,6 @@
 #
 # This file needs to be configured by the user before running the application.
 
-# Data storage location
-upload_folder: '_data/uploads'
-generated_data_folder: '_data/generated'
-
 # OpenRouter settings
 models:
   Summarize-Primary: 'mistralai/ministral-8b'

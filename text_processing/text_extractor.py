@@ -10,8 +10,6 @@ from pdfminer.layout import LTTextContainer
 
 from utils.file_management import get_file_path
 
-SUPPORTED_FILE_TYPES = ['pdf', 'pptx', 'docx']
-
 def _extract_text_from_pdf(pdf_path: str) -> dict:
     """
     Extracts all the text from a given PDF file.
@@ -50,18 +48,11 @@ def extract_text_from_file(file_id: str) -> dict:
         IOError: If there are issues with reading the file.
     """
     file_path = get_file_path(file_id)
-    
-    # Check that file_path is not None
-    if not file_path:
-        raise IOError(f"Error: File not found for file_id: {file_id}")
+    file_type = file_path.split('.')[-1]
     
     # Check if the file path is valid and leads to an existing file
     if not os.path.isfile(file_path):
         raise IOError(f"Error: File does not exist at path: {file_path}")
-    
-    file_type = file_path.split('.')[-1]
-    if file_type not in SUPPORTED_FILE_TYPES:
-        raise IOError(f"Error: Unsupported file type: {file_type}")
     
     if file_type == 'pdf':
         return _extract_text_from_pdf(file_path)
