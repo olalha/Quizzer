@@ -1,3 +1,10 @@
+"""
+This module provides functionality for extracting text from various file types.
+The main function is extract_text_from_file, which takes a file_id 
+and returns a dictionary of page numbers and their corresponding text.
+"""
+
+import os
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
 
@@ -5,8 +12,7 @@ from utils.file_management import get_file_path
 
 SUPPORTED_FILE_TYPES = ['pdf', 'pptx', 'docx']
 
-def _extract_text_from_pdf(pdf_path):
-    
+def _extract_text_from_pdf(pdf_path: str) -> dict:
     """
     Extracts all the text from a given PDF file.
 
@@ -16,7 +22,6 @@ def _extract_text_from_pdf(pdf_path):
     Returns:
         dict: A dictionary where each key is the page number (starting from 1).
     """
-    
     pdf_text = {}
 
     # Go through each page of the PDF and extract the text
@@ -30,15 +35,35 @@ def _extract_text_from_pdf(pdf_path):
     
     return pdf_text
 
-def extract_text_from_file(file_id):
+def extract_text_from_file(file_id: str) -> dict:
+    """
+    Extracts text from a file given its file_id.
+    Chooses the appropriate extraction function based on the file type.
     
+    Args:
+        file_id (str): The ID of the file to extract text from.
+
+    Returns:
+        dict: A dictionary where each key is the page number (starting from 1).
+        
+    Raises:
+        IOError: If there are issues with reading the file.
+    """
     file_path = get_file_path(file_id)
+    
+    # Check that file_path is not None
+    if not file_path:
+        raise IOError(f"Error: File not found for file_id: {file_id}")
+    
+    # Check if the file path is valid and leads to an existing file
+    if not os.path.isfile(file_path):
+        raise IOError(f"Error: File does not exist at path: {file_path}")
     
     file_type = file_path.split('.')[-1]
     if file_type not in SUPPORTED_FILE_TYPES:
-        raise ValueError(f"Error: Unsupported file type: {file_type}")
+        raise IOError(f"Error: Unsupported file type: {file_type}")
     
     if file_type == 'pdf':
         return _extract_text_from_pdf(file_path)
     else:
-        raise ValueError(f"Error: Unsupported file type: {file_type}")
+        return None

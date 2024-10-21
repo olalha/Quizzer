@@ -1,16 +1,18 @@
+from _config.settings import TARGET_WORD_COUNT_PER_BATCH, MIN_TOPICS_PER_BATCH, MAX_TOPICS_PER_BATCH, MODELS
+
 from text_processing.text_extractor import extract_text_from_file
 from text_processing.batch_splitter import split_pages_into_batches, get_batch_word_counts
-from _config.settings import TARGET_WORD_COUNT_PER_BATCH, MIN_TOPICS_PER_BATCH, MAX_TOPICS_PER_BATCH, MODELS
 from text_processing import prompt_builder
 from utils.api_request import prompt_llm
 
 def generate_summary_json(file_id):
 
+    # TODO: Try catch for extract_text_from_file
     text = extract_text_from_file(file_id)
+    
+    # TODO: Check that batches make sense (i.e. not empty) and that target word count is positive
     batches = split_pages_into_batches(text, TARGET_WORD_COUNT_PER_BATCH)
     
-    print(f"Batch 1: {batches[0]} - {batches[1]-1}")
-
     batch_prompts = []
     
     for inx, batch_start in enumerate(batches):
@@ -30,9 +32,20 @@ def generate_summary_json(file_id):
         except Exception as e:
             print(f"{e}")
             return None
+        
+    """
+    TESTING CODE (WIP)
     
+    SENDS REQUEST TO LLM FOR FIRST BATCH
+    """
+    
+    # Print page ranges for first batch
+    print(f"Batch 1: Pages {batches[0]} - {batches[1]-1}")
+    
+    # TODO: Check that MIN_TOPICS_PER_BATCH and MAX_TOPICS_PER_BATCH are set
     system_prompt = prompt_builder.render_prompt('sys_summarize.html', context={"min": MIN_TOPICS_PER_BATCH, "max": MAX_TOPICS_PER_BATCH})  
     
+    # Prepare messages for LLM
     messages = [
         {
             "role": "system",
@@ -44,9 +57,10 @@ def generate_summary_json(file_id):
         }
     ]
     
+    # Send request to LLM
     print("Sending request to LLM...")
-    
     try:
+        # TODO: Check that model is set and is valid
         response = prompt_llm(model=MODELS['Summarize-Primary'], messages=messages)
         return response
         

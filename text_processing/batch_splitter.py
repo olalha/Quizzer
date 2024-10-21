@@ -1,3 +1,8 @@
+"""
+This module provides functions for splitting text pages into batches based on word count.
+It includes utilities for dividing pages into batches and calculating word counts for each batch.
+"""
+
 import math
 
 def split_pages_into_batches(text: dict, target_word_count: int) -> list:
@@ -32,7 +37,8 @@ def split_pages_into_batches(text: dict, target_word_count: int) -> list:
     sorted_pages = sorted(text.keys())
     batch_starts = [sorted_pages[0]]  # First batch starts at the lowest page number
     current_word_count = 0
-
+    
+    # Iterate through pages and determine batch starts
     for i, page_num in enumerate(sorted_pages):
         current_word_count += word_counts[page_num]
 

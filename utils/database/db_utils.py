@@ -1,7 +1,43 @@
+"""
+Utility functions for managing uploaded files in the database and filesystem.
+Includes functions for saving, deleting, and cleaning up file records and their
+corresponding physical files.
+"""
+
 import os
 from sqlalchemy.orm import Session
+
 from .models import UploadedFile
+
 from _config.settings import UPLOAD_FOLDER
+
+# Set default upload folder if not specified in settings
+if UPLOAD_FOLDER is None:
+    UPLOAD_FOLDER = '_data/uploads'
+
+def save_uploaded_file(session: Session, uploaded_file):
+    """
+    Save an uploaded file to the filesystem and create a database record.
+
+    Args:
+        session (Session): SQLAlchemy database session
+        uploaded_file: File object to be saved
+    """
+    # Create upload directory if it doesn't exist
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    
+    # Construct file path
+    file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.name)
+    
+    # Write file to disk
+    with open(file_path, 'wb') as f:
+        f.write(uploaded_file.getbuffer())
+    
+    # Create database record
+    new_file = UploadedFile(filename=uploaded_file.name, filepath=file_path)
+    session.add(new_file)
+    session.commit()
 
 def delete_uploaded_file(session: Session, file_id: int):
     """

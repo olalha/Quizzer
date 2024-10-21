@@ -1,10 +1,18 @@
 import streamlit as st
-from utils.alert import show_alert
+
+from components.alert import show_alert
 from utils.file_management import load_files, get_file_name, get_file_id
 from text_processing.material_generator import generate_summary_json
 
+# Display alert if it exists in session state
 if st.session_state.alert:
     show_alert()
+    
+"""
+TESTING CODE (WIP)
+
+Allows user to select a file and send a request to the LLM for a summary.
+"""
 
 st.title("Prompt Builder")
 

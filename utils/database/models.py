@@ -1,6 +1,10 @@
+"""
+Database models for file uploads and learning materials.
+"""
+
+import datetime
 from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
-import datetime
 
 Base = declarative_base()
 
