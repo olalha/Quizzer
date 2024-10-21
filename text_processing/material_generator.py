@@ -39,9 +39,6 @@ def generate_summary_json(file_id):
     SENDS REQUEST TO LLM FOR FIRST BATCH
     """
     
-    # Print page ranges for first batch
-    print(f"Batch 1: Pages {batches[0]} - {batches[1]-1}")
-    
     # TODO: Check that MIN_TOPICS_PER_BATCH and MAX_TOPICS_PER_BATCH are set
     system_prompt = prompt_builder.render_prompt('sys_summarize.html', context={"min": MIN_TOPICS_PER_BATCH, "max": MAX_TOPICS_PER_BATCH})  
     
@@ -57,8 +54,6 @@ def generate_summary_json(file_id):
         }
     ]
     
-    # Send request to LLM
-    print("Sending request to LLM...")
     try:
         # TODO: Check that model is set and is valid
         response = prompt_llm(model=MODELS['Summarize-Primary'], messages=messages)

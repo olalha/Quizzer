@@ -1,5 +1,5 @@
-# Ignore config files
-_config/
+# Ignore .env file
+.env
 
 # Ignore user uploaded and generated data
 _data/
