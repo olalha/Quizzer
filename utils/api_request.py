@@ -3,72 +3,84 @@ This module provides functions for making API requests to OpenRouter's LLM servi
 It includes utilities for sending requests and handling responses.
 """
 
-import requests
-import json
+import asyncio
+import aiohttp
 import os
+from typing import List, Dict, Union
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-def _send_openrouter_request(model: str, messages: list) -> dict:
+async def _send_openrouter_request(model: str, messages: List[Dict]) -> Dict:
     """
-    Send a request to OpenRouter API and return the JSON response.
+    Send an asynchronous request to OpenRouter API and return the JSON response.
     """
-    
     api_key = os.getenv('OPENROUTER_API_KEY')
     
-    if api_key:
-        response = requests.post(
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
             url="https://openrouter.ai/api/v1/chat/completions",
-        headers={"Authorization": f"Bearer {api_key}",},
-        data=json.dumps({
-            "model": model,
-            "messages": messages
-            })
-        )
-        
-        return response.json()
-    else:
-        raise ValueError("Error: OPENROUTER_API_KEY environment variable is not set.")
-    
+            headers={"Authorization": f"Bearer {api_key}"},
+            json={"model": model, "messages": messages}
+        ) as response:
+            return await response.json()
 
-def prompt_llm(model: str, messages: list) -> dict:
+async def prompt_llm_async(model: str, messages: List[List[Dict]]) -> List[Dict]:
     """
-    Send a prompt to the specified LLM model via OpenRouter API.
+    Send prompts to the specified LLM model via OpenRouter API in parallel.
     
     Args:
         model (str): The name of the LLM model to use.
-        messages (list): A list of message dictionaries for the conversation.
+        messages (List[List[Dict]]): A list of message lists, each representing a separate request.
     
     Returns:
-        dict: The processed API response.
+        List[Dict]: A list of processed API responses.
     
     Raises:
-        ValueError: If there are issues with the input parameters or API response.
+        ValueError: If there are issues with the API response.
     """
-    
-    # Validate input parameters
-    if not messages or not isinstance(messages, list):
-        raise ValueError("Error: messages must be a list")
-    if not model or not isinstance(model, str):
-        raise ValueError("Error: model must be a string")
-    
-    # Send the request to OpenRouter API
-    try:
-        response = _send_openrouter_request(model, messages)
+    async def process_request(msg):
+        try:
+            response = await _send_openrouter_request(model, msg)
+            
+            if 'error' in response:
+                error_message = response.get('error', {}).get('message', 'Unknown error occurred')
+                raise ValueError(f"Error: OpenRouter API request failed: \n{msg} \n\n{error_message}")
+            if 'choices' not in response or not response['choices']:
+                raise ValueError(f"Error: 'choices' not found or empty in api response: \n{msg}")
+            
+            return response
         
-        # Check if the response contains an error
-        if 'error' in response:
-            error_message = response.get('error', {}).get('message', 'Unknown error occurred')
-            raise ValueError(f"Error: Request failed with message: {error_message}")
-        
-        # Check if the response contains the expected 'choices' key
-        if 'choices' not in response or not response['choices']:
-            raise ValueError("Error: 'choices' not found or empty in api response")
-        
-        return response
+        except Exception as e:
+            print(f"{str(e)}")
+            return None
+
+    tasks = [process_request(msg) for msg in messages]
+    return await asyncio.gather(*tasks)
+
+def prompt_llm(model: str, messages: Union[List[Dict], List[List[Dict]]]) -> List[Dict]:
+    """
+    Send prompts to the specified LLM model via OpenRouter API.
+    Handles requests in parallel if multiple messages are provided.
     
-    except Exception as e:
-        print(f"{str(e)}")
-        return None
+    Args:
+        model (str): The name of the LLM model to use.
+        messages (Union[List[Dict], List[List[Dict]]]): Either a single list of message dictionaries
+                   for one prompt, or a list of message lists for multiple prompts.
+    
+    Returns:
+        List[Dict]: A list of processed API responses.
+    
+    Raises:
+        ValueError: If the messages parameter is not in the correct format.
+    """
+
+    # If messages is a single request, wrap it in another list
+    if messages and isinstance(messages, list) and isinstance(messages[0], dict):
+        messages = [messages]
+    
+    # Validate input
+    if not isinstance(messages, list) or not all(isinstance(m, list) for m in messages):
+        raise ValueError("Error: Each item in messages for prompt_llm must be a list.")
+    if not all(all(isinstance(d, dict) for d in m) for m in messages):
+        raise ValueError("Error: Each message may only contain dictionaries for prompt_llm.")
+
+    # Run the async function and return the result
+    return asyncio.run(prompt_llm_async(model, messages))

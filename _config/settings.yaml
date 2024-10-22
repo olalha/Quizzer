@@ -4,9 +4,9 @@
 
 # OpenRouter settings
 models:
-  Summarize-Primary: 'mistralai/ministral-8b'
+  Summarize-Primary: 'perplexity/llama-3.1-sonar-large-128k-chat'
 
 # Text processing settings
 target_word_count_per_batch: 500
-min_topics_per_batch: 3
-max_topics_per_batch: 5
+min_topics_per_batch: 10
+max_topics_per_batch: 20

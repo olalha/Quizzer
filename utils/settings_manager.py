@@ -15,8 +15,11 @@ with open('_config/settings.yaml', 'r') as file:
 if not settings:
     raise ValueError("Error: Settings file is empty.")
 
-def get_setting(key: str):
-    if key not in settings:
-        raise ValueError(f"Error: '{key}' is missing from the settings file.")
-    else:
-        return settings.get(key)
+def get_setting(*keys):
+    current = settings
+    for key in keys:
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            raise ValueError(f"Error: '{'.'.join(keys)}' is missing from the settings file.")
+    return current
