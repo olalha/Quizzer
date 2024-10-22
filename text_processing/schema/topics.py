@@ -18,3 +18,16 @@ topics_json_schema = {
     },
     "required": ["topics"]
 }
+
+topics_json_example = """
+{
+    "topics": [
+        {"title": "", "pages": []},
+        {"title": "", "pages": []},
+        {"title": "", "pages": []}
+    ]
+}
+"""
+
+topics_json_start = "{\"topics\":[{\"title\":"
+topics_json_end = "}]}"

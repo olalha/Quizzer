@@ -1,11 +1,10 @@
-
 from utils.settings_manager import get_setting
 from utils.api_request import prompt_llm
 from .json_processor import extract_json, compare_json
 from .batch_splitter import split_pages_into_batches
 from .prompt_builder import render_prompt
 from .text_extractor import extract_text_from_file
-from .schema.topics import topics_json_schema
+from .schema.topics import topics_json_schema, topics_json_example, topics_json_start, topics_json_end
 
 def generate_summary(file_id: int):
     
@@ -42,7 +41,7 @@ def generate_summary(file_id: int):
     sys_prompt_context = {
         "min": get_setting('min_topics_per_batch'), 
         "max": get_setting('max_topics_per_batch'),
-        "json_schema": topics_json_schema
+        "json_example": topics_json_example
     }
     sys_prompt = render_prompt('sys_sum_tpcs.html', context=sys_prompt_context)
     
@@ -58,28 +57,24 @@ def generate_summary(file_id: int):
     # Send messages to the LLM
     llm_responses = prompt_llm(get_setting('models', 'Summarize-Primary'), messages)
     
-    return llm_responses
-
-    # TODO: Fix extract_json - start = llm_response.index('{')
-    
-    """
-    
     # Extract the topics in JSON format from the LLM responses
     topics = []
     for response in llm_responses:
         if response and 'choices' in response:
-            for choice in response['choices']:
-                json_data = extract_json(choice)
+            choices = response.get('choices', [])
+            if choices and 'message' in choices[0] and 'content' in choices[0]['message']:
+                message_content = choices[0]['message']['content']
+                json_data = extract_json(message_content, topics_json_start, topics_json_end)
                 if json_data:
                     if compare_json(json_data, topics_json_schema):
                         topics.append(json_data)
                     else:
-                        raise ValueError(f"Error: Invalid JSON in the LLM response: {choice}")
+                        raise ValueError(f"Error: Invalid JSON in the LLM response: {message_content}")
                 else:
-                    raise ValueError(f"Error: No JSON found in the LLM response: {choice}")
+                    raise ValueError(f"Error: No JSON found in the LLM response: {message_content}")
+            else:
+                raise ValueError(f"Error: Missing 'message' or 'content' in the LLM response choices: {choices}")
         else:
             raise ValueError(f"Error: No 'choices' found in the LLM response: {response}")
     
     return topics
-
-    """

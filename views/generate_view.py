@@ -23,7 +23,7 @@ if st.button("Submit"):
         selected_file_id = get_file_id(selected_file)
         
         topics = generate_summary(selected_file_id)
-        
+             
         for inx, topic in enumerate(topics):
             st.subheader(f"\nTopic {inx+1}\n\n")
             st.write(topic)

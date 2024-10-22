@@ -16,3 +16,6 @@ _quizzer_venv/
 
 # Ignore vscode files
 .vscode/
+
+# Ignore test files
+_testing/
